@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 120">
+  <!--
+    Full OhamsLight Hub logo.
+    The ring icon acts as the "O" in "Ohamslight", followed immediately by
+    "hamslight" in bold blue, with a "Hub" badge at the lower-right.
+    Fonts: Arial Black / Helvetica Neue Bold — exact glyph widths vary by
+    platform, so layout is sized for Arial Black (Windows default).
+  -->
+
+  <!-- ── Ring icon: nested SVG keeps gradient coordinates self-contained ── -->
+  <svg x="0" y="0" width="116" height="116" viewBox="0 0 200 200">
+    <defs>
+      <linearGradient id="gi" x1="10" y1="0" x2="190" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0%"   stop-color="#2B5EE6"/>
+        <stop offset="100%" stop-color="#7630BC"/>
+      </linearGradient>
+      <mask id="mi">
+        <rect width="200" height="200" fill="white"/>
+        <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(100,27.5)   rotate(-90)"/>
+        <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(136.25,37.2)  rotate(-60)"/>
+        <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(162.8,63.75)  rotate(-30)"/>
+        <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(172.5,100)    rotate(0)"/>
+        <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(162.8,136.25) rotate(30)"/>
+        <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(136.25,162.8) rotate(60)"/>
+        <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(100,172.5)    rotate(90)"/>
+        <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(63.75,162.8)  rotate(120)"/>
+        <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(37.2,136.25)  rotate(150)"/>
+        <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(27.5,100)     rotate(180)"/>
+        <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(37.2,63.75)   rotate(210)"/>
+        <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(63.75,37.2)   rotate(240)"/>
+      </mask>
+    </defs>
+    <g mask="url(#mi)">
+      <path fill="url(#gi)" d="M80.5,12.1   L119.5,12.1  L107.8,45.5 L92.2,45.5Z"/>
+      <path fill="url(#gi)" d="M127.1,14.2  L160.8,33.6  L134,56.8   L120.4,48.9Z"/>
+      <path fill="url(#gi)" d="M166.4,39.2  L185.8,72.9  L151.1,79.6 L143.2,66Z"/>
+      <path fill="url(#gi)" d="M187.9,80.5  L187.9,119.5 L154.5,107.8 L154.5,92.2Z"/>
+      <path fill="url(#gi)" d="M185.8,127.1 L166.4,160.8 L143.2,134  L151.1,120.4Z"/>
+      <path fill="url(#gi)" d="M160.8,166.3 L127.1,185.8 L120.4,151.1 L134,143.2Z"/>
+      <path fill="url(#gi)" d="M119.5,187.9 L80.5,187.9  L92.2,154.5 L107.8,154.5Z"/>
+      <path fill="url(#gi)" d="M72.9,185.8  L39.2,166.4  L66,143.2   L79.6,151.1Z"/>
+      <path fill="url(#gi)" d="M33.6,160.8  L14.2,127.1  L48.9,120.4 L56.8,134Z"/>
+      <path fill="url(#gi)" d="M12.1,119.5  L12.1,80.5   L45.5,92.2  L45.5,107.8Z"/>
+      <path fill="url(#gi)" d="M14.2,72.9   L33.6,39.2   L56.8,66    L48.9,79.6Z"/>
+      <path fill="url(#gi)" d="M39.2,33.6   L72.9,14.2   L79.6,48.9  L66,56.8Z"/>
+    </g>
+  </svg>
+
+  <!-- ── "hamslight" — bold blue, aligned so the ring above acts as the 'O' ── -->
+  <text
+    x="119" y="91"
+    font-family="'Arial Black','Helvetica Neue',Arial,sans-serif"
+    font-weight="900"
+    font-size="78"
+    fill="#1B58E8"
+    letter-spacing="-1">hamslight</text>
+
+  <!-- ── "Hub" badge: blue rect + white text, hangs off the bottom-right ── -->
+  <rect x="561" y="72" width="72" height="38" rx="5" fill="#1B58E8"/>
+  <text
+    x="597" y="99"
+    font-family="'Arial Black','Helvetica Neue',Arial,sans-serif"
+    font-weight="900"
+    font-size="26"
+    fill="white"
+    text-anchor="middle">Hub</text>
+</svg>

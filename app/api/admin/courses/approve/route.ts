@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
+import { createNotification } from '@/lib/notifications';
+import { sendEmail } from '@/lib/email';
 
 export async function POST(req: Request) {
   try {
@@ -21,6 +23,31 @@ export async function POST(req: Request) {
     await adminDb.collection('courses').doc(courseId).update({
       status: 'published',
     });
+
+    const courseDoc = await adminDb.collection('courses').doc(courseId).get();
+    if (courseDoc.exists) {
+      const teacherUid = courseDoc.data()?.createdBy;
+      const courseTitle = courseDoc.data()?.title || 'Your course';
+      if (teacherUid) {
+        const teacherDoc = await adminDb.collection('users').doc(teacherUid).get();
+        const teacherEmail = teacherDoc.data()?.email;
+        await createNotification(teacherUid, {
+          title: 'Course approved!',
+          message: `"${courseTitle}" has been approved and is now published.`,
+          type: 'course_approved',
+          link: '/teacher/courses',
+        });
+
+        if (teacherEmail) {
+          await sendEmail({
+            to: teacherEmail,
+            subject: `Course approved: ${courseTitle}`,
+            html: `<p>Your course <strong>${courseTitle}</strong> has been approved and published.</p>`,
+          });
+        }
+      }
+    }
+
 
     // Optional: audit log
     await adminDb.collection('auditLogs').add({

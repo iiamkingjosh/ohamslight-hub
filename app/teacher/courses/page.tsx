@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import LoadingSkeleton from '@/components/LoadingSkeleton';
+import PaginationControls from '@/components/PaginationControls';
 
 interface Course {
   id: string;
@@ -18,6 +20,8 @@ export default function MyCoursesPage() {
   const { user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
 
   useEffect(() => {
     fetchCourses();
@@ -39,7 +43,10 @@ export default function MyCoursesPage() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  const totalPages = Math.max(1, Math.ceil(courses.length / pageSize));
+  const pagedCourses = courses.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  if (loading) return <LoadingSkeleton rows={5} />;
 
   return (
     <div>
@@ -48,8 +55,8 @@ export default function MyCoursesPage() {
         <p>You haven't created any courses yet.</p>
       ) : (
         <div className="space-y-4">
-          {courses.map((course) => (
-            <div key={course.id} className="bg-white dark:bg-gray-800 p-4 rounded shadow flex justify-between">
+          {pagedCourses.map((course) => (
+            <div key={course.id} className="bg-white dark:bg-gray-800 p-4 rounded shadow flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
               <div>
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{course.title}</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">${course.price} - {course.category}</p>
@@ -60,16 +67,55 @@ export default function MyCoursesPage() {
                   }`}>{course.status}</span>
                 </p>
               </div>
-              <Link
-                href={`/teacher/courses/${course.id}/edit`}
-                className="text-blue-600 hover:underline"
-              >
-                Edit
-              </Link>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link
+                  href={`/teacher/courses/${course.id}/edit`}
+                  className="text-blue-400 hover:underline text-sm"
+                >
+                  Edit
+                </Link>
+                <Link
+                  href={`/teacher/courses/${course.id}/content`}
+                  className="text-cyan-400 hover:underline text-sm"
+                >
+                  Content
+                </Link>
+                <Link
+                  href={`/teacher/courses/${course.id}/quiz`}
+                  className="text-purple-400 hover:underline text-sm"
+                >
+                  Manage Quiz
+                </Link>
+                <Link
+                  href={`/teacher/courses/${course.id}/announcements`}
+                  className="text-yellow-400 hover:underline text-sm"
+                >
+                  Announcements
+                </Link>
+                <Link
+                  href={`/teacher/courses/${course.id}/discussion`}
+                  className="text-green-400 hover:underline text-sm"
+                >
+                  Discussion
+                </Link>
+                <Link
+                  href={`/teacher/courses/${course.id}/analytics`}
+                  className="text-orange-400 hover:underline text-sm"
+                >
+                  Analytics
+                </Link>
+                <Link
+                  href={`/teacher/courses/${course.id}/coupons`}
+                  className="text-pink-400 hover:underline text-sm"
+                >
+                  Coupons
+                </Link>
+              </div>
             </div>
           ))}
         </div>
       )}
+      <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
     </div>
   );
 }

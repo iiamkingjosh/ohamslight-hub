@@ -7,6 +7,8 @@ interface EnrollmentData {
   courseId: string;
   progress: number;
   completed: boolean;
+  lastLessonId?: string | null;
+  lastLessonAt?: FirebaseFirestore.Timestamp | null;
   enrolledAt: FirebaseFirestore.Timestamp;
 }
 
@@ -40,6 +42,8 @@ export async function GET(req: Request) {
           courseId: enrollment.courseId,
           progress: enrollment.progress || 0,
           completed: enrollment.completed || false,
+          lastLessonId: enrollment.lastLessonId || null,
+          lastLessonAt: enrollment.lastLessonAt || null,
           enrolledAt: enrollment.enrolledAt,
           course: courseDoc.exists ? { id: courseDoc.id, ...courseDoc.data() } : null,
         };

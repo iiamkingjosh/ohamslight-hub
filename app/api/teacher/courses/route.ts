@@ -55,6 +55,10 @@ export async function POST(req: Request) {
       price: Number(price),
       category,
       coverImage: coverImage || '',
+      content: { sections: [] },
+      averageRating: 0,
+      reviewCount: 0,
+      ratingSum: 0,
       createdBy: teacherUid,
       status: 'pending', // default pending
       createdAt: new Date(),

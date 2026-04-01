@@ -1,0 +1,40 @@
+/* Override react-phone-input-2 styles for dark/light mode */
+
+/* Input field */
+.react-tel-input .form-control {
+  @apply w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white;
+}
+
+/* Placeholder text */
+.react-tel-input .form-control::placeholder {
+  @apply text-gray-500 dark:text-gray-400;
+}
+
+/* Dropdown button (flag area) */
+.react-tel-input .flag-dropdown {
+  @apply border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700;
+}
+
+/* Dropdown list container */
+.react-tel-input .country-list {
+  @apply bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white;
+}
+
+/* Country items */
+.react-tel-input .country-list .country {
+  @apply text-gray-900 dark:text-white;
+}
+.react-tel-input .country-list .country:hover {
+  @apply bg-gray-100 dark:bg-gray-700;
+}
+.react-tel-input .country-list .country.highlight {
+  @apply bg-gray-200 dark:bg-gray-600;
+}
+
+/* Search box inside dropdown */
+.react-tel-input .country-list .search {
+  @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-white;
+}
+.react-tel-input .country-list .search-box {
+  @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600;
+}

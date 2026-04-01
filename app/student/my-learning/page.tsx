@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import LoadingSkeleton from '@/components/LoadingSkeleton';
+import PaginationControls from '@/components/PaginationControls';
 
 interface EnrolledCourse {
   enrollmentId: string;
@@ -11,6 +13,8 @@ interface EnrolledCourse {
   courseId: string;
   progress: number;
   completed: boolean;
+  lastLessonId?: string | null;
+  lastLessonAt?: any;
   enrolledAt: any;
   course: {
     id: string;
@@ -24,6 +28,8 @@ export default function MyLearningPage() {
   const { user } = useAuth();
   const [enrolled, setEnrolled] = useState<EnrolledCourse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
 
   useEffect(() => {
     fetchEnrolledCourses();
@@ -45,7 +51,10 @@ export default function MyLearningPage() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  const totalPages = Math.max(1, Math.ceil(enrolled.length / pageSize));
+  const pagedEnrolled = enrolled.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  if (loading) return <LoadingSkeleton rows={5} />;
 
   return (
     <div>
@@ -62,7 +71,7 @@ export default function MyLearningPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {enrolled.map((item) => (
+          {pagedEnrolled.map((item) => (
             <div key={item.enrollmentId} className="bg-white dark:bg-gray-800 p-4 rounded shadow flex items-center">
               {item.course.coverImage && (
                 <img src={item.course.coverImage} alt={item.course.title} className="w-20 h-20 object-cover rounded mr-4" />
@@ -83,15 +92,18 @@ export default function MyLearningPage() {
                 </div>
               </div>
               <Link
-                href={`/student/courses/${item.courseId}`}
+                href={item.lastLessonId
+                  ? `/student/courses/${item.courseId}/lessons/${item.lastLessonId}`
+                  : `/student/courses/${item.courseId}`}
                 className="ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
               >
-                Continue
+                {item.lastLessonId ? 'Resume' : 'Continue'}
               </Link>
             </div>
           ))}
         </div>
       )}
+      <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
     </div>
   );
 }

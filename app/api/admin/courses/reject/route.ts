@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
+import { createNotification } from '@/lib/notifications';
+import { sendEmail } from '@/lib/email';
 
 export async function POST(req: Request) {
   try {
@@ -22,6 +24,31 @@ export async function POST(req: Request) {
     await adminDb.collection('courses').doc(courseId).update({
       status: 'rejected',
     });
+
+    const courseDoc = await adminDb.collection('courses').doc(courseId).get();
+    if (courseDoc.exists) {
+      const teacherUid = courseDoc.data()?.createdBy;
+      const courseTitle = courseDoc.data()?.title || 'Your course';
+      if (teacherUid) {
+        const teacherDoc = await adminDb.collection('users').doc(teacherUid).get();
+        const teacherEmail = teacherDoc.data()?.email;
+        await createNotification(teacherUid, {
+          title: 'Course rejected',
+          message: `"${courseTitle}" was not approved. Please review and resubmit.`,
+          type: 'course_rejected',
+          link: '/teacher/courses',
+        });
+
+        if (teacherEmail) {
+          await sendEmail({
+            to: teacherEmail,
+            subject: `Course update: ${courseTitle}`,
+            html: `<p>Your course <strong>${courseTitle}</strong> was not approved. Please review and resubmit.</p>`,
+          });
+        }
+      }
+    }
+
 
     // Audit log
     await adminDb.collection('auditLogs').add({

@@ -3,13 +3,17 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { User, UserRole } from '@/types';
+import { useRouter } from 'next/navigation';
+import { getOrCreateConversation } from '@/lib/chats';
 import toast from 'react-hot-toast';
 
 export default function UserManagementPage() {
   const { user: currentUser, userData } = useAuth();
+  const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [startingChatId, setStartingChatId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchUsers();
@@ -48,12 +52,28 @@ export default function UserManagementPage() {
         throw new Error(error.error);
       }
       toast.success('Role updated');
-      // Update local state
       setUsers(users.map(u => u.uid === uid ? { ...u, role: newRole } : u));
     } catch (error: any) {
       toast.error(error.message);
     } finally {
       setUpdatingId(null);
+    }
+  };
+
+  const handleStartChat = async (targetUid: string) => {
+    if (!currentUser) return;
+    if (currentUser.uid === targetUid) {
+      toast.error('You cannot chat with yourself');
+      return;
+    }
+    setStartingChatId(targetUid);
+    try {
+      const convId = await getOrCreateConversation(currentUser.uid, targetUid);
+      router.push(`/chat/${convId}`);
+    } catch (error) {
+      toast.error('Failed to start chat');
+    } finally {
+      setStartingChatId(null);
     }
   };
 
@@ -96,23 +116,36 @@ export default function UserManagementPage() {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {u.uid !== currentUser?.uid && userData?.role === 'admin' && u.role === 'admin' ? (
-                    <span className="text-gray-400 text-sm">Cannot modify admin</span>
-                  ) : u.role === 'superadmin' && userData?.role !== 'superadmin' ? (
-                    <span className="text-gray-400 text-sm">Cannot modify superadmin</span>
-                  ) : (
-                    <select
-                      value={u.role}
-                      onChange={(e) => handleRoleChange(u.uid, e.target.value as UserRole)}
-                      disabled={updatingId === u.uid}
-                      className="border border-gray-300 dark:border-gray-600 rounded p-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                    >
-                      <option value="student">Student</option>
-                      <option value="teacher">Teacher</option>
-                      <option value="admin">Admin</option>
-                      {userData?.role === 'superadmin' && <option value="superadmin">Superadmin</option>}
-                    </select>
-                  )}
+                  <div className="flex items-center space-x-2">
+                    {u.uid !== currentUser?.uid && userData?.role === 'admin' && u.role === 'admin' ? (
+                      <span className="text-gray-400 text-sm">Cannot modify admin</span>
+                    ) : u.role === 'superadmin' && userData?.role !== 'superadmin' ? (
+                      <span className="text-gray-400 text-sm">Cannot modify superadmin</span>
+                    ) : (
+                      <select
+                        value={u.role}
+                        onChange={(e) => handleRoleChange(u.uid, e.target.value as UserRole)}
+                        disabled={updatingId === u.uid}
+                        className="border border-gray-300 dark:border-gray-600 rounded p-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                      >
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="admin">Admin</option>
+                        {userData?.role === 'superadmin' && <option value="superadmin">Superadmin</option>}
+                      </select>
+                    )}
+                    {/* Message button – show for all users except self */}
+                    {currentUser && u.uid !== currentUser.uid && (
+                      <button
+                        onClick={() => handleStartChat(u.uid)}
+                        disabled={startingChatId === u.uid}
+                        className="ml-2 text-blue-600 hover:text-blue-800 disabled:opacity-50"
+                        title={`Send message to ${u.fullName}`}
+                      >
+                        {startingChatId === u.uid ? '...' : '💬'}
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

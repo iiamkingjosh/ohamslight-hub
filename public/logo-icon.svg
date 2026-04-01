@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <!-- Horizontal gradient: blue (left) → purple (right), in user-space so each segment
+         picks up the correct colour based on its x-position in the 200×200 canvas. -->
+    <linearGradient id="g" x1="10" y1="0" x2="190" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#2B5EE6"/>
+      <stop offset="100%" stop-color="#7630BC"/>
+    </linearGradient>
+
+    <!-- Mask: white = show segment, black rects = punch transparent square windows.
+         Each rect is 14 × 11 px, centred at the mid-radius point of its segment,
+         then rotated by the segment's centre angle so it aligns radially. -->
+    <mask id="m">
+      <rect width="200" height="200" fill="white"/>
+      <!-- θ = −90°  (12 o'clock) -->
+      <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(100,27.5)   rotate(-90)"/>
+      <!-- θ = −60° -->
+      <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(136.25,37.2)  rotate(-60)"/>
+      <!-- θ = −30° -->
+      <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(162.8,63.75)  rotate(-30)"/>
+      <!-- θ =   0°  (3 o'clock) -->
+      <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(172.5,100)    rotate(0)"/>
+      <!-- θ =  30° -->
+      <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(162.8,136.25) rotate(30)"/>
+      <!-- θ =  60° -->
+      <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(136.25,162.8) rotate(60)"/>
+      <!-- θ =  90°  (6 o'clock) -->
+      <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(100,172.5)    rotate(90)"/>
+      <!-- θ = 120° -->
+      <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(63.75,162.8)  rotate(120)"/>
+      <!-- θ = 150° -->
+      <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(37.2,136.25)  rotate(150)"/>
+      <!-- θ = 180°  (9 o'clock) -->
+      <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(27.5,100)     rotate(180)"/>
+      <!-- θ = 210° -->
+      <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(37.2,63.75)   rotate(210)"/>
+      <!-- θ = 240° -->
+      <rect x="-7" y="-5.5" width="14" height="11" fill="black" transform="translate(63.75,37.2)   rotate(240)"/>
+    </mask>
+  </defs>
+
+  <!--
+    12 trapezoidal segments arranged in a ring.
+    Each is a quadrilateral: two outer corners (radius 90) and two inner corners (radius 55),
+    slightly tapered so the inner edge is narrower than the outer edge.
+    Computed from:
+      outer half-angle ±12.5°, inner half-angle ±8.125°
+      cos/sin of (θ ± half-angle) × radius, centred at (100, 100).
+  -->
+  <g mask="url(#m)">
+    <!-- θ=−90° -->  <path fill="url(#g)" d="M80.5,12.1   L119.5,12.1  L107.8,45.5 L92.2,45.5Z"/>
+    <!-- θ=−60° -->  <path fill="url(#g)" d="M127.1,14.2  L160.8,33.6  L134,56.8   L120.4,48.9Z"/>
+    <!-- θ=−30° -->  <path fill="url(#g)" d="M166.4,39.2  L185.8,72.9  L151.1,79.6 L143.2,66Z"/>
+    <!-- θ=  0° -->  <path fill="url(#g)" d="M187.9,80.5  L187.9,119.5 L154.5,107.8 L154.5,92.2Z"/>
+    <!-- θ= 30° -->  <path fill="url(#g)" d="M185.8,127.1 L166.4,160.8 L143.2,134  L151.1,120.4Z"/>
+    <!-- θ= 60° -->  <path fill="url(#g)" d="M160.8,166.3 L127.1,185.8 L120.4,151.1 L134,143.2Z"/>
+    <!-- θ= 90° -->  <path fill="url(#g)" d="M119.5,187.9 L80.5,187.9  L92.2,154.5 L107.8,154.5Z"/>
+    <!-- θ=120° -->  <path fill="url(#g)" d="M72.9,185.8  L39.2,166.4  L66,143.2   L79.6,151.1Z"/>
+    <!-- θ=150° -->  <path fill="url(#g)" d="M33.6,160.8  L14.2,127.1  L48.9,120.4 L56.8,134Z"/>
+    <!-- θ=180° -->  <path fill="url(#g)" d="M12.1,119.5  L12.1,80.5   L45.5,92.2  L45.5,107.8Z"/>
+    <!-- θ=210° -->  <path fill="url(#g)" d="M14.2,72.9   L33.6,39.2   L56.8,66    L48.9,79.6Z"/>
+    <!-- θ=240° -->  <path fill="url(#g)" d="M39.2,33.6   L72.9,14.2   L79.6,48.9  L66,56.8Z"/>
+  </g>
+</svg>
