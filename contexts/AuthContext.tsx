@@ -38,6 +38,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               setUserData(null);
             }
             setLoading(false);
+          },
+          (error) => {
+            console.error('Failed to load user profile from Firestore:', error);
+            setUserData(null);
+            setLoading(false);
           }
         );
         return () => unsubscribeFirestore();
