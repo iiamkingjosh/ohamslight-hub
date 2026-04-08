@@ -130,7 +130,7 @@ export default function CertificatePage() {
       <div id="certificate" className="max-w-3xl mx-auto">
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border-8 border-double border-blue-800">
           {/* Header band */}
-          <div className="bg-linear-to-r from-blue-800 to-indigo-900 px-10 py-6 text-center">
+          <div className="bg-linear-to-r from-blue-800 to-indigo-900 px-10 py-6 text-center text-balance">
             <p className="text-blue-200 text-sm font-semibold uppercase tracking-[0.2em] mb-1">
               OhamsLight Hub
             </p>
@@ -164,7 +164,7 @@ export default function CertificatePage() {
                 <p className="text-xs text-gray-500">Platform Director</p>
                 <p className="text-sm font-semibold text-gray-700">OhamsLight Hub</p>
               </div>
-              <div className="shrink-0 w-16 h-16 rounded-full bg-linear-to-br from-blue-800 to-indigo-900 flex items-center justify-center shadow-lg">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-blue-800 to-indigo-900 shadow-lg">
                 <span className="text-white font-bold text-xl">✓</span>
               </div>
               <div className="text-center">
@@ -176,7 +176,7 @@ export default function CertificatePage() {
           </div>
 
           {/* Footer band */}
-          <div className="bg-linear-to-r from-blue-800 to-indigo-900 px-10 py-3 text-center">
+          <div className="bg-linear-to-r from-blue-800 to-indigo-900 px-10 py-3 text-center text-balance">
             <p className="text-blue-300 text-xs">
               Certificate ID: {certificate.studentUid?.slice(0, 8).toUpperCase()}
               {certificate.courseId?.slice(0, 6).toUpperCase()}
