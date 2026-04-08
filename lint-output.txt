@@ -1,0 +1,117 @@
+﻿
+> ohamslight-hub@0.1.0 lint
+> eslint
+
+
+C:\ohamslight-hub\app\(auth)\forgot-password\page.tsx
+  55:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\ohamslight-hub\app\(auth)\login\page.tsx
+  43:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\ohamslight-hub\app\(auth)\register\page.tsx
+  129:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\ohamslight-hub\app\admin\page.tsx
+  23:6   warning  React Hook useEffect has a missing dependency: 'fetchStats'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  34:14  warning  'error' is defined but never used                                                                              @typescript-eslint/no-unused-vars
+
+C:\ohamslight-hub\app\admin\users\page.tsx
+  20:6   warning  React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  31:14  warning  'error' is defined but never used                                                                              @typescript-eslint/no-unused-vars
+  74:14  warning  'error' is defined but never used                                                                              @typescript-eslint/no-unused-vars
+
+C:\ohamslight-hub\app\api\admin\courses\page.tsx
+  27:6   warning  React Hook useEffect has a missing dependency: 'fetchPendingCourses'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  38:14  warning  'error' is defined but never used                                                                                       @typescript-eslint/no-unused-vars
+
+C:\ohamslight-hub\app\notifications\page.tsx
+  46:8  warning  'router' is assigned a value but never used                                                                            @typescript-eslint/no-unused-vars
+  55:5  warning  React Hook useEffect has a missing dependency: 'fetchNotifications'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\student\courses\[courseId]\announcements\page.tsx
+  28:5  warning  React Hook useEffect has a missing dependency: 'fetchAnnouncements'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\student\courses\[courseId]\certificate\page.tsx
+  19:6  warning  React Hook useEffect has a missing dependency: 'fetchCertificate'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\student\courses\[courseId]\lessons\[lessonId]\page.tsx
+  37:6  warning  React Hook useEffect has a missing dependency: 'fetchContent'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  41:6  warning  React Hook useEffect has a missing dependency: 'markVisited'. Either include it or remove the dependency array   react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\student\courses\[courseId]\page.tsx
+  48:6  warning  React Hook useEffect has a missing dependency: 'loadAll'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\student\courses\[courseId]\quiz\page.tsx
+  51:6  warning  React Hook useEffect has a missing dependency: 'fetchQuiz'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\student\marketplace\page.tsx
+   41:6   warning  React Hook useEffect has a missing dependency: 'fetchCoursesAndBookmarks'. Either include it or remove the dependency array                                                                                                                                                              react-hooks/exhaustive-deps
+   84:14  warning  'error' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  218:6   warning  React Hook useEffect has missing dependencies: 'couponByCourse' and 'handleEnroll'. Either include them or remove the dependency array                                                                                                                                                   react-hooks/exhaustive-deps
+  264:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\ohamslight-hub\app\student\my-learning\page.tsx
+  36:6   warning  React Hook useEffect has a missing dependency: 'fetchEnrolledCourses'. Either include it or remove the dependency array                                                                                                                                                                  react-hooks/exhaustive-deps
+  47:14  warning  'error' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  77:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\ohamslight-hub\app\student\page.tsx
+   39:6   warning  React Hook useEffect has a missing dependency: 'fetchEnrolledCourses'. Either include it or remove the dependency array                                                                                                                                                                  react-hooks/exhaustive-deps
+   61:14  warning  'error' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  229:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\ohamslight-hub\app\superadmin\audit-logs\page.tsx
+  15:6  warning  React Hook useEffect has a missing dependency: 'fetchLogs'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\superadmin\create-admin\page.tsx
+  19:6  warning  React Hook useEffect has a missing dependency: 'fetchStudents'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\superadmin\manage-admins\page.tsx
+  16:6  warning  React Hook useEffect has a missing dependency: 'fetchAdmins'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\superadmin\page.tsx
+   5:10  warning  'User' is defined but never used                                                                               @typescript-eslint/no-unused-vars
+   5:16  warning  'AuditLog' is defined but never used                                                                           @typescript-eslint/no-unused-vars
+  20:6   warning  React Hook useEffect has a missing dependency: 'fetchStats'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  41:14  warning  'error' is defined but never used                                                                              @typescript-eslint/no-unused-vars
+
+C:\ohamslight-hub\app\teacher\courses\[courseId]\analytics\page.tsx
+  31:6  warning  React Hook useEffect has a missing dependency: 'fetchAnalytics'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\teacher\courses\[courseId]\announcements\page.tsx
+  32:5  warning  React Hook useEffect has a missing dependency: 'fetchAnnouncements'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\teacher\courses\[courseId]\content\page.tsx
+  54:6  warning  React Hook useEffect has a missing dependency: 'fetchContent'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\teacher\courses\[courseId]\coupons\page.tsx
+  37:6  warning  React Hook useEffect has a missing dependency: 'fetchCoupons'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\teacher\courses\[courseId]\quiz\page.tsx
+  34:6  warning  React Hook useEffect has a missing dependency: 'fetchQuiz'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\app\teacher\courses\page.tsx
+  28:6   warning  React Hook useEffect has a missing dependency: 'fetchCourses'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  39:14  warning  'error' is defined but never used                                                                                @typescript-eslint/no-unused-vars
+
+C:\ohamslight-hub\app\teacher\create-course\page.tsx
+  160:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\ohamslight-hub\app\teacher\page.tsx
+  22:6   warning  React Hook useEffect has a missing dependency: 'fetchMyCourses'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  33:14  warning  'error' is defined but never used                                                                                  @typescript-eslint/no-unused-vars
+
+C:\ohamslight-hub\components\DiscussionBoard.tsx
+  40:5  warning  React Hook useEffect has a missing dependency: 'fetchThreads'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\ohamslight-hub\components\Navbar.tsx
+  23:14  warning  'error' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  69:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\ohamslight-hub\components\RoleGuard.tsx
+  17:3  warning  'fallbackPath' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+Γ£û 49 problems (0 errors, 49 warnings)
+
+
