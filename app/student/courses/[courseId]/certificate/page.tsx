@@ -7,6 +7,27 @@ import { useAuth } from '@/contexts/AuthContext';
 import toast from 'react-hot-toast';
 import type { Certificate } from '@/types';
 
+function toDateSafe(value: Certificate['issuedAt']): Date {
+  if (
+    typeof value === 'object' &&
+    value !== null &&
+    'toDate' in value &&
+    typeof value.toDate === 'function'
+  ) {
+    return value.toDate();
+  }
+
+  if (value instanceof Date) {
+    return value;
+  }
+
+  if (typeof value === 'object' && value !== null && '_seconds' in value && typeof value._seconds === 'number') {
+    return new Date(value._seconds * 1000);
+  }
+
+  return new Date(String(value));
+}
+
 export default function CertificatePage() {
   const { courseId } = useParams<{ courseId: string }>();
   const { user } = useAuth();
@@ -71,9 +92,7 @@ export default function CertificatePage() {
     );
   }
 
-  const issuedDate = certificate.issuedAt?.toDate
-    ? certificate.issuedAt.toDate()
-    : new Date(certificate.issuedAt?._seconds ? certificate.issuedAt._seconds * 1000 : certificate.issuedAt);
+  const issuedDate = toDateSafe(certificate.issuedAt);
 
   const formattedDate = issuedDate.toLocaleDateString('en-US', {
     year: 'numeric',

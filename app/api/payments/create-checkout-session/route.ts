@@ -6,6 +6,13 @@ interface CouponData {
   amount?: number;
 }
 
+interface StoredCoupon extends CouponData {
+  active?: boolean;
+  expiresAt?: Date | string | number | { toDate?: () => Date } | null;
+  usageLimit?: number;
+  usedCount?: number;
+}
+
 function calculateDiscountedPrice(base: number, coupon: CouponData | null) {
   if (!coupon) return { finalPrice: base, discount: 0 };
   if (coupon.discountType === 'percent') {
@@ -42,12 +49,30 @@ export async function POST(req: Request) {
       normalizedCoupon = String(couponCode).trim().toUpperCase();
       const couponDoc = await adminDb.collection('courses').doc(courseId).collection('coupons').doc(normalizedCoupon).get();
       if (couponDoc.exists) {
-        const c = couponDoc.data()!;
-        const expired = c.expiresAt
-          ? ((c.expiresAt?.toDate ? c.expiresAt.toDate() : new Date(c.expiresAt)).getTime() < Date.now())
-          : false;
+        const c = couponDoc.data() as StoredCoupon;
+        const expiresAtValue = c.expiresAt;
+        let expired = false;
+        if (expiresAtValue) {
+          let exp: Date;
+          if (
+            typeof expiresAtValue === 'object' &&
+            expiresAtValue !== null &&
+            'toDate' in expiresAtValue &&
+            typeof expiresAtValue.toDate === 'function'
+          ) {
+            exp = expiresAtValue.toDate();
+          } else if (expiresAtValue instanceof Date) {
+            exp = expiresAtValue;
+          } else {
+            exp = new Date(String(expiresAtValue));
+          }
+          expired = exp.getTime() < Date.now();
+        }
         const exhausted = Number(c.usageLimit || 0) > 0 && Number(c.usedCount || 0) >= Number(c.usageLimit || 0);
-        if (c.active && !expired && !exhausted) coupon = c;
+        const validDiscountType = c.discountType === 'percent' || c.discountType === 'fixed';
+        if (c.active && !expired && !exhausted && validDiscountType) {
+          coupon = { discountType: c.discountType, amount: c.amount };
+        }
       }
     }
 

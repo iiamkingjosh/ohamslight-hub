@@ -1,19 +1,24 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '@/lib/firebaseClient';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 
 export default function ForgotPasswordPage() {
-  const searchParams = useSearchParams();
-  const [email, setEmail] = useState(searchParams.get('email') ?? '');
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [emailError, setEmailError] = useState('');
+
+  useEffect(() => {
+    const initialEmail = new URLSearchParams(window.location.search).get('email');
+    if (initialEmail) {
+      setEmail(initialEmail);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

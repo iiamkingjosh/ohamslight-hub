@@ -74,14 +74,15 @@ export default function TeacherQuizPage() {
     setQuestions(questions.filter((q) => q.id !== id));
   };
 
-  const updateQuestion = (id: string, field: keyof QuestionDraft, value: string) => {
+  const updateQuestion = (id: string, field: 'text' | 'type' | 'correctAnswer', value: string) => {
     setQuestions(questions.map((q) => {
       if (q.id !== id) return q;
       if (field === 'type') {
+        const nextType: QuestionDraft['type'] = value === 'true-false' ? 'true-false' : 'multiple-choice';
         return {
           ...q,
-          type: value,
-          options: value === 'true-false' ? ['True', 'False'] : ['', '', '', ''],
+          type: nextType,
+          options: nextType === 'true-false' ? ['True', 'False'] : ['', '', '', ''],
           correctAnswer: '',
         };
       }

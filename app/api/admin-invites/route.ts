@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 
+interface StudentInviteRow {
+  id: string;
+  deleted?: boolean;
+  [key: string]: unknown;
+}
+
 function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : 'Internal server error';
 }
@@ -42,8 +48,8 @@ export async function GET(req: Request) {
       .orderBy('createdAt', 'desc')
       .get();
 
-    const students = snapshot.docs
-      .map((doc) => ({ id: doc.id, ...doc.data() }))
+    const students: StudentInviteRow[] = snapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }) as StudentInviteRow)
       .filter((student) => !student.deleted);
 
     return NextResponse.json(students);

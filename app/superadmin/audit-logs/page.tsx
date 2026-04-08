@@ -6,6 +6,26 @@ import { useAuth } from '@/contexts/AuthContext';
 import { AuditLog } from '@/types';
 import toast from 'react-hot-toast';
 
+function formatTimestamp(value: AuditLog['timestamp']): string {
+  let date: Date;
+  if (
+    typeof value === 'object' &&
+    value !== null &&
+    'toDate' in value &&
+    typeof value.toDate === 'function'
+  ) {
+    date = value.toDate();
+  } else if (value instanceof Date) {
+    date = value;
+  } else if (typeof value === 'object' && value !== null && '_seconds' in value && typeof value._seconds === 'number') {
+    date = new Date(value._seconds * 1000);
+  } else {
+    date = new Date(String(value));
+  }
+
+  return date.toLocaleString();
+}
+
 export default function AuditLogsPage() {
   const { user } = useAuth();
   const [logs, setLogs] = useState<AuditLog[]>([]);
@@ -53,7 +73,7 @@ export default function AuditLogsPage() {
                 <td className="px-6 py-4 whitespace-nowrap">{log.performedBy}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{log.targetUser}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {new Date(log.timestamp).toLocaleString()}
+                  {formatTimestamp(log.timestamp)}
                 </td>
               </tr>
             ))}

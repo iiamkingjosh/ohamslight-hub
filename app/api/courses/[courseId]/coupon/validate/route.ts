@@ -6,6 +6,13 @@ interface CouponData {
   amount?: number;
 }
 
+interface StoredCoupon extends CouponData {
+  active?: boolean;
+  expiresAt?: Date | string | number | { toDate?: () => Date } | null;
+  usageLimit?: number;
+  usedCount?: number;
+}
+
 function calculateDiscountedPrice(base: number, coupon: CouponData | null) {
   if (!coupon) return { finalPrice: base, discount: 0 };
   if (coupon.discountType === 'percent') {
@@ -36,10 +43,23 @@ export async function POST(
     const couponDoc = await adminDb.collection('courses').doc(courseId).collection('coupons').doc(normalizedCode).get();
     if (!couponDoc.exists) return NextResponse.json({ error: 'Invalid coupon code' }, { status: 404 });
 
-    const coupon = couponDoc.data()!;
+    const coupon = couponDoc.data() as StoredCoupon;
     if (!coupon.active) return NextResponse.json({ error: 'Coupon is inactive' }, { status: 400 });
     if (coupon.expiresAt) {
-      const exp = coupon.expiresAt?.toDate ? coupon.expiresAt.toDate() : new Date(coupon.expiresAt);
+      const expiresAtValue = coupon.expiresAt;
+      let exp: Date;
+      if (
+        typeof expiresAtValue === 'object' &&
+        expiresAtValue !== null &&
+        'toDate' in expiresAtValue &&
+        typeof expiresAtValue.toDate === 'function'
+      ) {
+        exp = expiresAtValue.toDate();
+      } else if (expiresAtValue instanceof Date) {
+        exp = expiresAtValue;
+      } else {
+        exp = new Date(String(expiresAtValue));
+      }
       if (exp.getTime() < Date.now()) {
         return NextResponse.json({ error: 'Coupon has expired' }, { status: 400 });
       }

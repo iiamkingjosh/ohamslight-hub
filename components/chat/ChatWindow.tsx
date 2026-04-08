@@ -26,7 +26,15 @@ export default function ChatWindow({ conversationId, currentUserUid, otherUserUi
       orderBy('timestamp', 'asc')
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      setMessages(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      const nextMessages: ChatMessage[] = snapshot.docs.map((messageDoc) => {
+        const data = messageDoc.data() as Partial<ChatMessage>;
+        return {
+          id: messageDoc.id,
+          senderId: typeof data.senderId === 'string' ? data.senderId : '',
+          content: typeof data.content === 'string' ? data.content : '',
+        };
+      });
+      setMessages(nextMessages);
     });
     return unsubscribe;
   }, [conversationId]);

@@ -9,7 +9,21 @@ import toast from 'react-hot-toast';
 import type { Announcement, TimestampValue } from '@/types';
 
 function timeAgo(val: TimestampValue): string {
-	const date = val?.toDate ? val.toDate() : new Date(val?._seconds ? val._seconds * 1000 : val);
+	let date: Date;
+	if (
+		typeof val === 'object' &&
+		val !== null &&
+		'toDate' in val &&
+		typeof val.toDate === 'function'
+	) {
+		date = val.toDate();
+	} else if (val instanceof Date) {
+		date = val;
+	} else if (typeof val === 'object' && val !== null && '_seconds' in val && typeof val._seconds === 'number') {
+		date = new Date(val._seconds * 1000);
+	} else {
+		date = new Date(String(val));
+	}
 	const diff = Math.floor((Date.now() - date.getTime()) / 1000);
 	if (diff < 60) return 'just now';
 	if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
