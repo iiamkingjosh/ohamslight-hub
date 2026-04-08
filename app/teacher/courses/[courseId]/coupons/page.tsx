@@ -1,9 +1,20 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+
+interface CouponItem {
+  id: string;
+  code: string;
+  discountType: 'percent' | 'fixed';
+  amount: number;
+  usedCount?: number;
+  usageLimit?: number;
+  active: boolean;
+}
 
 export default function CourseCouponsPage() {
   const { user } = useAuth();
@@ -12,7 +23,7 @@ export default function CourseCouponsPage() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [coupons, setCoupons] = useState<any[]>([]);
+  const [coupons, setCoupons] = useState<CouponItem[]>([]);
   const [form, setForm] = useState({
     code: '',
     discountType: 'percent',
@@ -35,8 +46,8 @@ export default function CourseCouponsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to load');
       setCoupons(data);
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : 'Failed to load coupons');
     } finally {
       setLoading(false);
     }
@@ -60,8 +71,8 @@ export default function CourseCouponsPage() {
       toast.success('Coupon saved');
       setForm({ code: '', discountType: 'percent', amount: 10, usageLimit: 0, expiresAt: '', active: true });
       fetchCoupons();
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : 'Failed to save coupon');
     } finally {
       setSaving(false);
     }

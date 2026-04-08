@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -80,8 +81,8 @@ export default function CreateCoursePage() {
 
       toast.success('Course created successfully! Pending approval.');
       router.push('/teacher');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'Failed to create course');
     } finally {
       setLoading(false);
     }

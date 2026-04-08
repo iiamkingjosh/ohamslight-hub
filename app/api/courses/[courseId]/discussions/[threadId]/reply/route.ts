@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
+import type { DecodedIdToken } from 'firebase-admin/auth';
 
-async function verifyAccess(decoded: any, courseId: string) {
+async function verifyAccess(decoded: DecodedIdToken, courseId: string) {
 	const courseDoc = await adminDb.collection('courses').doc(courseId).get();
 	if (!courseDoc.exists) return false;
 	if (courseDoc.data()?.createdBy === decoded.uid) return true;
@@ -48,8 +49,9 @@ export async function GET(
 			thread: { id: threadDoc.id, ...threadDoc.data() },
 			replies: repliesSnap.docs.map((d) => ({ id: d.id, ...d.data() })),
 		});
-	} catch (error: any) {
-		return NextResponse.json({ error: error.message }, { status: 500 });
+	} catch (error: unknown) {
+		const message = error instanceof Error ? error.message : 'Unknown error';
+		return NextResponse.json({ error: message }, { status: 500 });
 	}
 }
 
@@ -94,7 +96,8 @@ export async function POST(
 		]);
 
 		return NextResponse.json({ success: true });
-	} catch (error: any) {
-		return NextResponse.json({ error: error.message }, { status: 500 });
+	} catch (error: unknown) {
+		const message = error instanceof Error ? error.message : 'Unknown error';
+		return NextResponse.json({ error: message }, { status: 500 });
 	}
 }

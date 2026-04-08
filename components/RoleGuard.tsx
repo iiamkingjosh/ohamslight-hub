@@ -8,13 +8,11 @@ import { UserRole } from '@/types';
 interface RoleGuardProps {
   children: React.ReactNode;
   allowedRoles: UserRole[];
-  fallbackPath?: string;
 }
 
 export default function RoleGuard({
   children,
   allowedRoles,
-  fallbackPath = '/dashboard',
 }: RoleGuardProps) {
   const { user, userData, loading } = useAuth();
   const router = useRouter();

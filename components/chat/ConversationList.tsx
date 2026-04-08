@@ -9,7 +9,7 @@ interface Conversation {
   id: string;
   participants: string[];
   lastMessage: string;
-  lastMessageTimestamp: any;
+  lastMessageTimestamp: unknown;
 }
 
 interface ConversationListProps {

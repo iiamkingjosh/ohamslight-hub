@@ -18,8 +18,9 @@ export async function GET(
     if (!certDoc.exists) return NextResponse.json(null);
 
     return NextResponse.json({ id: certDoc.id, ...certDoc.data() });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get certificate error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

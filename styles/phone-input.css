@@ -2,7 +2,8 @@
 
 /* Input field */
 .react-tel-input .form-control {
-  @apply w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white;
+  @apply w-full py-2 pr-3 pl-14 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white;
+  height: 42px;
 }
 
 /* Placeholder text */
@@ -13,6 +14,11 @@
 /* Dropdown button (flag area) */
 .react-tel-input .flag-dropdown {
   @apply border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700;
+}
+
+/* Keep country list above surrounding form elements */
+.react-tel-input .country-list {
+  z-index: 60 !important;
 }
 
 /* Dropdown list container */
@@ -37,4 +43,36 @@
 }
 .react-tel-input .country-list .search-box {
   @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600;
+}
+
+/* Force dark dropdown look regardless of library stylesheet order. */
+html .react-tel-input .country-list {
+  background-color: #1f2937 !important;
+  border: 1px solid #4b5563 !important;
+  color: #f3f4f6 !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45) !important;
+}
+
+html .react-tel-input .country-list .country {
+  background-color: transparent !important;
+  color: #f3f4f6 !important;
+}
+
+html .react-tel-input .country-list .country:hover,
+html .react-tel-input .country-list .country.highlight {
+  background-color: #374151 !important;
+}
+
+html .react-tel-input .country-list .search {
+  background-color: #1f2937 !important;
+}
+
+html .react-tel-input .country-list .search-box {
+  background-color: #111827 !important;
+  color: #f3f4f6 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+html .react-tel-input .country-list .search-box::placeholder {
+  color: #9ca3af !important;
 }

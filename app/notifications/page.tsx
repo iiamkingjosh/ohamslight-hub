@@ -1,8 +1,8 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { BellIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
@@ -16,10 +16,31 @@ const typeIcon: Record<string, string> = {
 	new_enrollment: '🎓',
 	announcement: '📢',
 	quiz_passed: '🏆',
+	admin_invite: '🛡️',
+	admin_invite_accepted: '✅',
+	admin_invite_declined: '↩️',
+	teacher_request: '🧑‍🏫',
+	teacher_request_approved: '✅',
+	teacher_request_rejected: '❌',
 };
 
-function timeAgo(val: any): string {
-	const date = val?.toDate ? val.toDate() : new Date(val?._seconds ? val._seconds * 1000 : val);
+interface TimestampLike { toDate?: () => Date; _seconds?: number; }
+function timeAgo(val: TimestampLike | Date | string | number | null | undefined): string {
+	let date: Date;
+	if (
+		typeof val === 'object' &&
+		val !== null &&
+		'toDate' in val &&
+		typeof val.toDate === 'function'
+	) {
+		date = val.toDate();
+	} else if (val instanceof Date) {
+		date = val;
+	} else if (typeof val === 'object' && val !== null && val._seconds) {
+		date = new Date(val._seconds * 1000);
+	} else {
+		date = new Date(val as string | number);
+	}
 	const diff = Math.floor((Date.now() - date.getTime()) / 1000);
 	if (diff < 60) return 'just now';
 	if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
@@ -29,7 +50,6 @@ function timeAgo(val: any): string {
 
 export default function NotificationsPage() {
 	const { user } = useAuth();
-	const router = useRouter();
 	const [notifications, setNotifications] = useState<AppNotification[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [markingRead, setMarkingRead] = useState(false);

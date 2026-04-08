@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @next/next/no-img-element */
 
 import { useState, useEffect } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -7,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { FirebaseError } from 'firebase/app';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -28,8 +30,9 @@ export default function LoginPage() {
       await signInWithEmailAndPassword(auth, email, password);
       toast.success('Logged in successfully');
       router.push('/dashboard');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const message = error instanceof FirebaseError ? error.message : 'Login failed';
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -61,6 +64,11 @@ export default function LoginPage() {
             required
             className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <div className="text-right mt-1">
+            <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+              Forgot password?
+            </Link>
+          </div>
         </div>
         <button
           type="submit"
@@ -71,7 +79,7 @@ export default function LoginPage() {
         </button>
       </form>
       <p className="mt-4 text-center text-gray-600 dark:text-gray-400">
-        Don't have an account?{' '}
+        Don&apos;t have an account?{' '}
         <Link href="/register" className="text-blue-600 hover:underline">
           Register
         </Link>

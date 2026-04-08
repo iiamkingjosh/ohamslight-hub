@@ -23,8 +23,9 @@ export async function GET(req: Request) {
     const courses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
     return NextResponse.json(courses);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Fetch pending courses error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

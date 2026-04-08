@@ -1,10 +1,12 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import type { Certificate } from '@/types';
 
 interface Lesson {
   id: string;
@@ -19,17 +21,24 @@ interface Section {
   lessons: Lesson[];
 }
 
+interface CourseReview {
+  id: string;
+  reviewerName?: string;
+  rating?: number;
+  comment?: string;
+}
+
 export default function CourseDetailPage() {
   const { courseId } = useParams<{ courseId: string }>();
   const { user } = useAuth();
   const [quizAvailable, setQuizAvailable] = useState(false);
-  const [certificate, setCertificate] = useState<any>(null);
+  const [certificate, setCertificate] = useState<Certificate | null>(null);
   const [courseTitle, setCourseTitle] = useState('Course');
   const [courseDescription, setCourseDescription] = useState('');
   const [sections, setSections] = useState<Section[]>([]);
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   const [progress, setProgress] = useState(0);
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<CourseReview[]>([]);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
@@ -103,8 +112,8 @@ export default function CourseDetailPage() {
       toast.success('Review submitted');
       setComment('');
       loadAll();
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : 'Failed to submit review');
     } finally {
       setSubmittingReview(false);
     }

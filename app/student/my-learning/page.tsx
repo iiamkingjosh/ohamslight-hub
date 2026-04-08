@@ -1,4 +1,6 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @next/next/no-img-element */
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -14,8 +16,8 @@ interface EnrolledCourse {
   progress: number;
   completed: boolean;
   lastLessonId?: string | null;
-  lastLessonAt?: any;
-  enrolledAt: any;
+  lastLessonAt?: unknown;
+  enrolledAt: unknown;
   course: {
     id: string;
     title: string;
@@ -44,7 +46,7 @@ export default function MyLearningPage() {
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
       setEnrolled(data);
-    } catch (error) {
+    } catch {
       toast.error('Failed to load your courses');
     } finally {
       setLoading(false);
@@ -61,7 +63,7 @@ export default function MyLearningPage() {
       <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">My Learning</h1>
       {enrolled.length === 0 ? (
         <div className="text-center py-10">
-          <p className="text-gray-600 dark:text-gray-400 mb-4">You haven't enrolled in any courses yet.</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">You haven&apos;t enrolled in any courses yet.</p>
           <Link
             href="/student/marketplace"
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded"

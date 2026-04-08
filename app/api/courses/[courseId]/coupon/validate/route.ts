@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebaseAdmin';
 
-function calculateDiscountedPrice(base: number, coupon: any) {
+interface CouponData {
+  discountType: 'percent' | 'fixed';
+  amount?: number;
+}
+
+function calculateDiscountedPrice(base: number, coupon: CouponData | null) {
   if (!coupon) return { finalPrice: base, discount: 0 };
   if (coupon.discountType === 'percent') {
     const discount = (base * Number(coupon.amount || 0)) / 100;
@@ -57,7 +62,8 @@ export async function POST(
         amount: coupon.amount,
       },
     });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

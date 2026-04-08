@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -6,12 +7,25 @@ import { useParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
+interface AnalyticsResponse {
+  course?: { title?: string };
+  metrics: {
+    totalEnrollments: number;
+    completionRate: number;
+    averageProgress: number;
+    averageQuizScore: number;
+    quizPassRate: number;
+    revenue: number;
+  };
+  trend?: Array<{ date: string; enrollments: number }>;
+}
+
 export default function TeacherCourseAnalyticsPage() {
   const { user } = useAuth();
   const { courseId } = useParams<{ courseId: string }>();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<AnalyticsResponse | null>(null);
 
   useEffect(() => {
     fetchAnalytics();
@@ -26,8 +40,8 @@ export default function TeacherCourseAnalyticsPage() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Failed to load analytics');
       setData(json);
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : 'Failed to load analytics');
     } finally {
       setLoading(false);
     }

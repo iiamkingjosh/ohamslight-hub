@@ -22,9 +22,10 @@ export async function GET(
     if (!quizDoc.exists) return NextResponse.json(null);
 
     return NextResponse.json({ id: quizDoc.id, ...quizDoc.data() });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get quiz error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -75,8 +76,9 @@ export async function POST(
     await adminDb.collection('quizzes').doc(courseId).set(quizData, { merge: true });
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Save quiz error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

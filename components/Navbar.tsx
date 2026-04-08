@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @next/next/no-img-element */
 
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,7 +21,7 @@ export default function Navbar() {
     try {
       await signOut(auth);
       toast.success('Logged out');
-    } catch (error) {
+    } catch {
       toast.error('Logout failed');
     }
   };
@@ -31,7 +32,8 @@ export default function Navbar() {
       case 'superadmin':
         return [
           { href: '/superadmin', label: 'Dashboard' },
-          { href: '/superadmin/create-admin', label: 'Create Admin' },
+          { href: '/superadmin/create-admin', label: 'Invite Admins' },
+          { href: '/admin/users', label: 'Users' },
           { href: '/superadmin/manage-admins', label: 'Manage Admins' },
           { href: '/superadmin/audit-logs', label: 'Audit Logs' },
         ];
@@ -61,12 +63,12 @@ export default function Navbar() {
   if (!user) return null;
 
   return (
-    <nav className="bg-gray-900 text-white p-4">
+    <nav className="border-b border-gray-200 bg-white p-4 text-gray-900 transition-colors dark:border-gray-800 dark:bg-gray-900 dark:text-white">
       <div className="container mx-auto">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
           <img src="/logo-icon.svg" alt="OhamsLight Hub" width={32} height={32} className="h-8 w-8" />
-          <span className="text-xl font-bold text-white">OhamsLight Hub</span>
+          <span className="text-xl font-bold text-gray-900 dark:text-white">OhamsLight Hub</span>
           </Link>
 
           <div className="flex items-center gap-3">
@@ -74,7 +76,7 @@ export default function Navbar() {
             <div className="hidden md:block"><NotificationBell /></div>
             <button
               type="button"
-              className="md:hidden rounded p-1 hover:bg-gray-800"
+              className="md:hidden rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={() => setMobileOpen((v) => !v)}
               aria-label="Toggle navigation menu"
             >
@@ -83,23 +85,23 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="hidden md:flex md:items-center md:justify-end md:gap-4 mt-3">
+        <div className="mt-3 hidden md:flex md:items-center md:justify-end md:gap-4">
           {getNavLinks().map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`hover:text-blue-400 text-sm ${pathname === link.href ? 'text-blue-400' : ''}`}
+              className={`text-sm hover:text-blue-500 dark:hover:text-blue-400 ${pathname === link.href ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-200'}`}
             >
               {link.label}
             </Link>
           ))}
-          <Link href="/chat" className="hover:text-blue-400 text-sm">Messages</Link>
+          <Link href="/chat" className="text-sm text-gray-700 hover:text-blue-500 dark:text-gray-200 dark:hover:text-blue-400">Messages</Link>
           <button onClick={handleLogout} className="bg-red-600 px-3 py-1 rounded hover:bg-red-700 text-sm">Logout</button>
         </div>
 
         {mobileOpen && (
-          <div className="md:hidden mt-3 rounded-lg border border-gray-800 bg-gray-950 p-3 space-y-2">
-            <div className="flex items-center justify-between pb-2 border-b border-gray-800">
+          <div className="mt-3 space-y-2 rounded-lg border border-gray-300 bg-white p-3 md:hidden dark:border-gray-800 dark:bg-gray-950">
+            <div className="flex items-center justify-between border-b border-gray-300 pb-2 dark:border-gray-800">
               <ThemeToggle />
               <NotificationBell />
             </div>
@@ -108,12 +110,12 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className={`block rounded px-2 py-1.5 text-sm hover:bg-gray-800 ${pathname === link.href ? 'text-blue-400' : ''}`}
+                className={`block rounded px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 ${pathname === link.href ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-200'}`}
               >
                 {link.label}
               </Link>
             ))}
-            <Link href="/chat" onClick={() => setMobileOpen(false)} className="block rounded px-2 py-1.5 text-sm hover:bg-gray-800">Messages</Link>
+            <Link href="/chat" onClick={() => setMobileOpen(false)} className="block rounded px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Messages</Link>
             <button onClick={handleLogout} className="w-full text-left rounded px-2 py-1.5 text-sm bg-red-600 hover:bg-red-700">Logout</button>
           </div>
         )}

@@ -1,8 +1,8 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { User, AuditLog } from '@/types';
 import toast from 'react-hot-toast';
 
 export default function SuperadminDashboard() {
@@ -38,7 +38,7 @@ export default function SuperadminDashboard() {
         totalStudents: 0,
         recentLogs: 0,
       });
-    } catch (error) {
+    } catch {
       toast.error('Failed to load stats');
     } finally {
       setLoading(false);

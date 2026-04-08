@@ -18,6 +18,13 @@ export async function POST(req: Request) {
     const { uid, newRole } = await req.json();
     if (!uid || !newRole) return NextResponse.json({ error: 'Missing uid or newRole' }, { status: 400 });
 
+    if (newRole === 'teacher') {
+      return NextResponse.json(
+        { error: 'Teacher role must be assigned through the teacher request approval flow.' },
+        { status: 400 }
+      );
+    }
+
     // Prevent admin from changing another admin's role or superadmin's role
     const targetDoc = await adminDb.collection('users').doc(uid).get();
     const targetData = targetDoc.data();
@@ -45,8 +52,9 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Update role error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

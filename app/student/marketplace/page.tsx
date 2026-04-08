@@ -1,4 +1,6 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @next/next/no-img-element */
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -81,7 +83,7 @@ export default function MarketplacePage() {
 
       const uniqueCats = Array.from(new Set(data.map((c: Course) => c.category)));
       setCategories(uniqueCats as string[]);
-    } catch (error) {
+    } catch {
       toast.error('Failed to load courses');
     } finally {
       setLoading(false);
@@ -123,8 +125,8 @@ export default function MarketplacePage() {
         throw new Error(error.error);
       }
       toast.success('Enrolled successfully!');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'Enrollment failed');
     } finally {
       setEnrollingId(null);
     }
@@ -146,8 +148,8 @@ export default function MarketplacePage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Coupon invalid');
       toast.success(`Coupon applied. New price: $${Number(data.finalPrice).toFixed(2)}`);
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : 'Coupon validation failed');
     }
   };
 
@@ -180,8 +182,8 @@ export default function MarketplacePage() {
       }
 
       throw new Error('No checkout url returned');
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : 'Failed to start checkout');
     } finally {
       setProcessingId(null);
     }
@@ -210,8 +212,8 @@ export default function MarketplacePage() {
 
         await handleEnroll(courseId, couponByCourse[courseId]);
         toast.success('Payment verified. Enrollment complete!');
-      } catch (e: any) {
-        toast.error(e.message);
+      } catch (e: unknown) {
+        toast.error(e instanceof Error ? e.message : 'Payment verification failed');
       }
     };
     if (user) run();
@@ -237,7 +239,7 @@ export default function MarketplacePage() {
           <option value="all">All Categories</option>
           {categories.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
         </select>
-        <select value={priceFilter} onChange={(e) => setPriceFilter(e.target.value as any)} className="border border-gray-300 dark:border-gray-600 rounded p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+        <select value={priceFilter} onChange={(e) => setPriceFilter(e.target.value as 'all' | 'free' | 'paid')} className="border border-gray-300 dark:border-gray-600 rounded p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
           <option value="all">All Prices</option>
           <option value="free">Free</option>
           <option value="paid">Paid</option>

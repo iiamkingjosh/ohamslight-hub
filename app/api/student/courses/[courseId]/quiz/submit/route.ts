@@ -30,7 +30,7 @@ export async function POST(
     if (!quizDoc.exists) return NextResponse.json({ error: 'Quiz not found' }, { status: 404 });
 
     const quiz = quizDoc.data()!;
-    const questions: any[] = quiz.questions;
+    const questions = quiz.questions as Array<{ id: string; correctAnswer: unknown }>;
 
     if (!Array.isArray(answers) || answers.length !== questions.length) {
       return NextResponse.json({ error: 'Invalid answers: must answer all questions' }, { status: 400 });
@@ -85,8 +85,9 @@ export async function POST(
     }
 
     return NextResponse.json({ score, passed, results, passingScore: quiz.passingScore });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Quiz submit error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

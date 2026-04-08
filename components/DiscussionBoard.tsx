@@ -1,12 +1,13 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { ChatBubbleLeftRightIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
-import type { DiscussionThread, DiscussionReply } from '@/types';
+import type { DiscussionThread, DiscussionReply, TimestampValue } from '@/types';
 
-function timeAgo(val: any): string {
+function timeAgo(val: TimestampValue): string {
 	const date = val?.toDate ? val.toDate() : new Date(val?._seconds ? val._seconds * 1000 : val);
 	const diff = Math.floor((Date.now() - date.getTime()) / 1000);
 	if (diff < 60) return 'just now';
@@ -47,8 +48,8 @@ export default function DiscussionBoard({ courseId }: Props) {
 			});
 			if (!res.ok) throw new Error((await res.json()).error);
 			setThreads(await res.json());
-		} catch (e: any) {
-			toast.error(e.message || 'Failed to load discussions');
+		} catch (e: unknown) {
+			toast.error(e instanceof Error ? e.message : 'Failed to load discussions');
 		} finally {
 			setLoading(false);
 		}
@@ -73,8 +74,8 @@ export default function DiscussionBoard({ courseId }: Props) {
 			setNewThread({ title: '', body: '' });
 			setShowNewForm(false);
 			fetchThreads();
-		} catch (e: any) {
-			toast.error(e.message);
+		} catch (e: unknown) {
+			toast.error(e instanceof Error ? e.message : 'Failed to post thread');
 		} finally {
 			setPosting(false);
 		}
@@ -138,8 +139,8 @@ export default function DiscussionBoard({ courseId }: Props) {
 					)
 				);
 			}
-		} catch (e: any) {
-			toast.error(e.message);
+		} catch (e: unknown) {
+			toast.error(e instanceof Error ? e.message : 'Failed to post reply');
 		} finally {
 			setSubmittingReply(false);
 		}

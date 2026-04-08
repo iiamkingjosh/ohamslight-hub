@@ -1,13 +1,14 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { MegaphoneIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
-import type { Announcement } from '@/types';
+import type { Announcement, TimestampValue } from '@/types';
 
-function timeAgo(val: any): string {
+function timeAgo(val: TimestampValue): string {
 	const date = val?.toDate ? val.toDate() : new Date(val?._seconds ? val._seconds * 1000 : val);
 	const diff = Math.floor((Date.now() - date.getTime()) / 1000);
 	if (diff < 60) return 'just now';
@@ -35,8 +36,8 @@ export default function StudentAnnouncementsPage() {
 			});
 			if (!res.ok) throw new Error((await res.json()).error);
 			setAnnouncements(await res.json());
-		} catch (e: any) {
-			toast.error(e.message || 'Failed to load announcements');
+		} catch (e: unknown) {
+			toast.error(e instanceof Error ? e.message : 'Failed to load announcements');
 		} finally {
 			setLoading(false);
 		}

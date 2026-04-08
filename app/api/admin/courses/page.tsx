@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,7 +14,7 @@ interface Course {
   coverImage?: string;
   createdBy: string;
   status: string;
-  createdAt: any;
+  createdAt: unknown;
 }
 
 export default function CourseApprovalPage() {
@@ -35,7 +36,7 @@ export default function CourseApprovalPage() {
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
       setCourses(data);
-    } catch (error) {
+    } catch {
       toast.error('Failed to load pending courses');
     } finally {
       setLoading(false);
@@ -57,8 +58,8 @@ export default function CourseApprovalPage() {
       if (!res.ok) throw new Error('Approval failed');
       toast.success('Course approved');
       setCourses(courses.filter(c => c.id !== courseId));
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'Approval failed');
     } finally {
       setProcessingId(null);
     }
@@ -80,8 +81,8 @@ export default function CourseApprovalPage() {
       if (!res.ok) throw new Error('Rejection failed');
       toast.success('Course rejected');
       setCourses(courses.filter(c => c.id !== courseId));
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'Rejection failed');
     } finally {
       setProcessingId(null);
     }

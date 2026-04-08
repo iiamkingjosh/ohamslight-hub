@@ -1,5 +1,29 @@
 ﻿export type UserRole = 'superadmin' | 'admin' | 'teacher' | 'student';
 
+export type TimestampValue =
+  | Date
+  | string
+  | number
+  | null
+  | {
+      toDate?: () => Date;
+      _seconds?: number;
+    };
+
+export interface AdminInvitation {
+  status: 'pending' | 'accepted' | 'rejected';
+  invitedBy: string;
+  invitedAt: TimestampValue;
+  respondedAt?: TimestampValue;
+}
+
+export interface TeacherRequest {
+  status: 'pending' | 'approved' | 'rejected';
+  requestedAt: TimestampValue;
+  respondedAt?: TimestampValue;
+  reviewedBy?: string;
+}
+
 export interface User {
   uid: string;
   firstName: string;
@@ -12,7 +36,9 @@ export interface User {
   deleted: boolean;
   profileCompleted: boolean;
   status: 'active' | 'inactive';
-  createdAt: Date;
+  createdAt: TimestampValue;
+  adminInvitation?: AdminInvitation | null;
+  teacherRequest?: TeacherRequest | null;
 }
 
 export interface AuditLog {
@@ -20,8 +46,8 @@ export interface AuditLog {
   action: string;
   performedBy: string;
   targetUser: string;
-  metadata?: any;
-  timestamp: Date;
+  metadata?: Record<string, unknown>;
+  timestamp: TimestampValue;
 }
 
 export interface Question {
@@ -60,7 +86,7 @@ export interface Certificate {
   courseId: string;
   courseName: string;
   studentName: string;
-  issuedAt: any;
+  issuedAt: TimestampValue;
 }
 
 export interface AppNotification {
@@ -70,7 +96,7 @@ export interface AppNotification {
   type: 'course_approved' | 'course_rejected' | 'new_enrollment' | 'announcement' | 'quiz_passed' | string;
   link?: string;
   read: boolean;
-  createdAt: any;
+  createdAt: TimestampValue;
 }
 
 export interface Announcement {
@@ -79,7 +105,7 @@ export interface Announcement {
   teacherUid: string;
   title: string;
   body: string;
-  createdAt: any;
+  createdAt: TimestampValue;
 }
 
 export interface DiscussionThread {
@@ -90,7 +116,7 @@ export interface DiscussionThread {
   title: string;
   body: string;
   replyCount: number;
-  createdAt: any;
+  createdAt: TimestampValue;
 }
 
 export interface DiscussionReply {
@@ -99,7 +125,7 @@ export interface DiscussionReply {
   authorUid: string;
   authorName: string;
   body: string;
-  createdAt: any;
+  createdAt: TimestampValue;
 }
 
 export interface Lesson {

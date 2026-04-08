@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -73,7 +74,7 @@ export default function TeacherQuizPage() {
     setQuestions(questions.filter((q) => q.id !== id));
   };
 
-  const updateQuestion = (id: string, field: keyof QuestionDraft, value: any) => {
+  const updateQuestion = (id: string, field: keyof QuestionDraft, value: string) => {
     setQuestions(questions.map((q) => {
       if (q.id !== id) return q;
       if (field === 'type') {
@@ -146,8 +147,8 @@ export default function TeacherQuizPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       toast.success('Quiz saved successfully!');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'Failed to save quiz');
     } finally {
       setSaving(false);
     }

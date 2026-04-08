@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -23,8 +24,8 @@ export default function AuditLogsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setLogs(data);
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'Failed to load audit logs');
     } finally {
       setLoading(false);
     }

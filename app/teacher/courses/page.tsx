@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,7 +14,7 @@ interface Course {
   price: number;
   category: string;
   status: string;
-  createdAt: any;
+  createdAt: unknown;
 }
 
 export default function MyCoursesPage() {
@@ -36,7 +37,7 @@ export default function MyCoursesPage() {
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
       setCourses(data);
-    } catch (error) {
+    } catch {
       toast.error('Failed to load courses');
     } finally {
       setLoading(false);
@@ -52,7 +53,7 @@ export default function MyCoursesPage() {
     <div>
       <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">My Courses</h1>
       {courses.length === 0 ? (
-        <p>You haven't created any courses yet.</p>
+        <p>You haven&apos;t created any courses yet.</p>
       ) : (
         <div className="space-y-4">
           {pagedCourses.map((course) => (

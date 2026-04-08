@@ -10,8 +10,14 @@ interface ChatWindowProps {
   otherUserUid: string;
 }
 
+interface ChatMessage {
+  id: string;
+  senderId: string;
+  content: string;
+}
+
 export default function ChatWindow({ conversationId, currentUserUid, otherUserUid }: ChatWindowProps) {
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
@@ -39,6 +45,8 @@ export default function ChatWindow({ conversationId, currentUserUid, otherUserUi
     });
     setNewMessage('');
   };
+
+  void otherUserUid;
 
   return (
     <div className="flex flex-col h-96 border rounded-lg overflow-hidden bg-white dark:bg-gray-800">

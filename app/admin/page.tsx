@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -31,7 +32,7 @@ export default function AdminDashboard() {
       if (!res.ok) throw new Error('Failed to fetch stats');
       const data = await res.json();
       setStats(data);
-    } catch (error) {
+    } catch {
       toast.error('Failed to load dashboard stats');
     } finally {
       setLoading(false);

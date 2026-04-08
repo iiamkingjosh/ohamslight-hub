@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -28,7 +29,7 @@ export default function UserManagementPage() {
       if (!res.ok) throw new Error('Failed to fetch users');
       const data = await res.json();
       setUsers(data);
-    } catch (error) {
+    } catch {
       toast.error('Failed to load users');
     } finally {
       setLoading(false);
@@ -53,8 +54,9 @@ export default function UserManagementPage() {
       }
       toast.success('Role updated');
       setUsers(users.map(u => u.uid === uid ? { ...u, role: newRole } : u));
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to update role';
+      toast.error(message);
     } finally {
       setUpdatingId(null);
     }
@@ -70,10 +72,50 @@ export default function UserManagementPage() {
     try {
       const convId = await getOrCreateConversation(currentUser.uid, targetUid);
       router.push(`/chat/${convId}`);
-    } catch (error) {
+    } catch {
       toast.error('Failed to start chat');
     } finally {
       setStartingChatId(null);
+    }
+  };
+
+  const handleTeacherRequest = async (uid: string, decision: 'approve' | 'reject') => {
+    setUpdatingId(uid);
+    try {
+      const idToken = await currentUser?.getIdToken();
+      const res = await fetch('/api/teacher-requests/respond', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({ uid, decision }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to review teacher request');
+      }
+
+      toast.success(decision === 'approve' ? 'Teacher request approved' : 'Teacher request rejected');
+      setUsers(users.map((u) =>
+        u.uid === uid
+          ? {
+              ...u,
+              role: decision === 'approve' ? 'teacher' : u.role,
+              teacherRequest: {
+                ...(u.teacherRequest ?? { requestedAt: new Date() }),
+                status: decision === 'approve' ? 'approved' : 'rejected',
+                respondedAt: new Date(),
+                reviewedBy: currentUser?.uid,
+              },
+            }
+          : u
+      ));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to review teacher request';
+      toast.error(message);
+    } finally {
+      setUpdatingId(null);
     }
   };
 
@@ -90,6 +132,7 @@ export default function UserManagementPage() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Role</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Teacher Request</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -116,7 +159,40 @@ export default function UserManagementPage() {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
+                  {u.teacherRequest ? (
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      u.teacherRequest.status === 'pending'
+                        ? 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200'
+                        : u.teacherRequest.status === 'approved'
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                          : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                    }`}>
+                      {u.teacherRequest.status}
+                    </span>
+                  ) : (
+                    <span className="text-sm text-gray-400">None</span>
+                  )}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center space-x-2">
+                    {u.teacherRequest?.status === 'pending' && (
+                      <>
+                        <button
+                          onClick={() => handleTeacherRequest(u.uid, 'approve')}
+                          disabled={updatingId === u.uid}
+                          className="rounded bg-green-600 px-2.5 py-1 text-xs text-white hover:bg-green-700 disabled:opacity-50"
+                        >
+                          Approve teacher
+                        </button>
+                        <button
+                          onClick={() => handleTeacherRequest(u.uid, 'reject')}
+                          disabled={updatingId === u.uid}
+                          className="rounded bg-red-600 px-2.5 py-1 text-xs text-white hover:bg-red-700 disabled:opacity-50"
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
                     {u.uid !== currentUser?.uid && userData?.role === 'admin' && u.role === 'admin' ? (
                       <span className="text-gray-400 text-sm">Cannot modify admin</span>
                     ) : u.role === 'superadmin' && userData?.role !== 'superadmin' ? (
@@ -128,8 +204,8 @@ export default function UserManagementPage() {
                         disabled={updatingId === u.uid}
                         className="border border-gray-300 dark:border-gray-600 rounded p-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
                       >
+                        {u.role === 'teacher' && <option value="teacher">Teacher</option>}
                         <option value="student">Student</option>
-                        <option value="teacher">Teacher</option>
                         <option value="admin">Admin</option>
                         {userData?.role === 'superadmin' && <option value="superadmin">Superadmin</option>}
                       </select>

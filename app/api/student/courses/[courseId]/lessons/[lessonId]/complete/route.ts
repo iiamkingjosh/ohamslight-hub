@@ -36,7 +36,7 @@ export async function POST(
     if (!courseDoc.exists) return NextResponse.json({ error: 'Course not found' }, { status: 404 });
 
     const sections = courseDoc.data()?.content?.sections || [];
-    const totalLessons = sections.reduce((acc: number, sec: any) => acc + (sec.lessons?.length || 0), 0);
+    const totalLessons = (sections as Array<{ lessons?: unknown[] }>).reduce((acc: number, sec) => acc + (sec.lessons?.length || 0), 0);
     const newCompletedCount = completedLessons.length + 1;
     const newProgress = totalLessons > 0
       ? Math.round((newCompletedCount / totalLessons) * 100)
@@ -51,7 +51,8 @@ export async function POST(
     });
 
     return NextResponse.json({ success: true, progress: newProgress });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
